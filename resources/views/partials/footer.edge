@@ -1,0 +1,19 @@
+<nav class="mt-4 flex justify-between items-center">
+  @button({ href: route('locale.home', { locale: i18n.locale }) })
+    Lovefi
+  @end
+  
+  <div class="flex gap-2">
+    @if(i18n.locale === 'en')
+      @button({ href: route('locale.terms', { locale: 'en', slug: 'terms-of-service' }) })
+        {{ t('messages.termsOfService') }}
+      @end
+    @else
+      @button({ href: route('locale.terms', { locale: 'fr', slug: 'conditions-generales' }) })
+        {{ t('messages.termsOfService') }}
+      @end
+    @endif
+    
+  </div>
+
+</nav>

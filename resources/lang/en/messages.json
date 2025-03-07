@@ -18,5 +18,6 @@
   "delete": "Delete",
   "name": "Name",
   "createdAt": "Created at",
-  "updatedAt": "Updated at"
+  "updatedAt": "Updated at",
+  "termsOfService": "Terms of service"
 }

@@ -1,15 +1,15 @@
 <nav class="mb-4 flex justify-between items-center">
-  @button({ href: route('home.locale', { locale: i18n.locale }) })
+  @button({ href: route('locale.home', { locale: i18n.locale }) })
     Lovefi
   @end
   
   <div class="flex gap-2">
     @if(i18n.locale === 'en')
-      @button({ href: route('home.locale', { locale: 'fr' }) })
+      @button({ href: route('locale.home', { locale: 'fr' }) })
         FR
       @end
     @else
-      @button({ href: route('home.locale', { locale: 'en' }) })
+      @button({ href: route('locale.home', { locale: 'en' }) })
         EN
       @end
     @endif

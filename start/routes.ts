@@ -20,12 +20,24 @@ router
   .as('home')
 
 router
-  .get('/:locale', async ({ auth, view }) => {
-    await auth.check()
-    return view.render('pages/home')
+  .group(() => {
+    router
+      .get('/', async ({ auth, view }) => {
+        await auth.check()
+        return view.render('pages/home')
+      })
+      .as('home')
+
+    router
+      .get('/:slug', async ({ view }) => {
+        return view.render('pages/terms')
+      })
+      .where('slug', /terms-of-service|conditions-generales/)
+      .as('terms')
   })
+  .prefix(':locale')
   .where('locale', /en|fr/)
-  .as('home.locale')
+  .as('locale')
 
 router
   .group(() => {
