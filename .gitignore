@@ -4,10 +4,7 @@ build
 tmp
 
 # Secrets
-.env
-.env.local
-.env.production.local
-.env.development.local
+**/.env*
 
 # Frontend assets compiled code
 public/assets
@@ -21,7 +18,7 @@ yarn-error.log
 .idea
 
 # Platform specific
-.DS_Store
+**/.DS_Store
 
 
 _legacy
