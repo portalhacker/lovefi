@@ -6,128 +6,175 @@ import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import express from 'express';
 
-import { listSheets, readRange, writeRange } from './services/google_sheets.js';
-import {
-  createLinkToken,
-  fireTestWebhookEvent,
-  getAccessToken,
-  listInstitutions,
-  syncTransactions,
-} from './services/plaid.js';
+import GoogleSheetsService from './services/google_sheets.js';
+import PlaidService from './services/plaid.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const googleSheetsService = new GoogleSheetsService();
+const plaidService = new PlaidService();
+
 export async function listSheetsController(req, res) {
-  res.json(await listSheets());
+  try {
+    const sheets = await googleSheetsService.listSheets();
+    res.json(sheets);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
 
 export async function writeRangeController(req, res) {
-  const { range, value } = req.body;
-  res.json(await writeRange(range, [[value]]));
+  try {
+    const { range, value } = req.body;
+    const result = await googleSheetsService.writeRange(range, [[value]]);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
 
 export async function readRangeController(req, res) {
-  const { range } = req.query;
-  res.json(await readRange(range));
+  try {
+    const { range } = req.query;
+    const result = await googleSheetsService.readRange(range);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
 
 export async function listInstitutionsController(req, res) {
-  res.json(await listInstitutions());
+  try {
+    const institutions = await plaidService.listInstitutions();
+    res.json(institutions);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
 
 export async function getAccessTokenController(req, res) {
-  const publicToken = await createLinkToken();
-  const accessToken = await getAccessToken(publicToken);
-  writeRange('credentials!PLAID', [[JSON.stringify(accessToken)]]);
-  res.json(accessToken);
+  try {
+    const publicToken = await plaidService.createLinkToken();
+    const accessToken = await plaidService.getAccessToken(publicToken);
+    await Promise.all([
+      googleSheetsService.writeRange('credentials!PLAID', [
+        [JSON.stringify(accessToken)],
+      ]),
+      googleSheetsService.writeRange('credentials!CURSOR', [['']]),
+    ]);
+    res.json(accessToken);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
 
 export async function syncTransactionsController(req, res) {
-  const cellValue = (await readRange('credentials!PLAID')).values[0][0];
-  const { access_token } = await JSON.parse(cellValue);
-  const cursorCell = await readRange('credentials!CURSOR');
-  let newTransactions;
-  if (cursorCell.values) {
-    newTransactions = await syncTransactions(
-      access_token,
-      cursorCell.values[0][0]
+  try {
+    const [cellValue, cursorCell] = await Promise.all([
+      googleSheetsService.readRange('credentials!PLAID'),
+      googleSheetsService.readRange('credentials!CURSOR'),
+    ]);
+    const { access_token } = JSON.parse(cellValue.values[0][0]);
+    const newTransactions = cursorCell.values
+      ? await plaidService.syncTransactions(
+          access_token,
+          cursorCell.values[0][0]
+        )
+      : await plaidService.syncTransactions(access_token);
+
+    console.log(newTransactions);
+
+    const transactionsRange = await googleSheetsService.readRange(
+      'test_transactions!A2:F'
     );
-  } else {
-    newTransactions = await syncTransactions(access_token);
-  }
-  console.log(newTransactions);
-  const transactionsRange = (await readRange('test_transactions!A2:F')).values;
-  let transactions = transactionsRange.map((transaction) => {
-    return {
+    let transactions = transactionsRange.values.map((transaction) => ({
       id: transaction[0],
       date: transaction[1],
       account: transaction[2],
       vendor: transaction[3],
       description: transaction[4],
       value: transaction[5],
-    };
-  });
-  // add new transactions
-  newTransactions.added.forEach((transaction) => {
-    if (!transactions.some((t) => t.id === transaction.transaction_id)) {
-      transactions.push({
+    }));
+
+    newTransactions.added.forEach((transaction) => {
+      if (!transactions.some((t) => t.id === transaction.transaction_id)) {
+        transactions.push({
+          id: transaction.transaction_id,
+          date: transaction.date,
+          account: transaction.account_id,
+          vendor: transaction.merchant_name,
+          description: transaction.name,
+          value: transaction.amount,
+        });
+      }
+    });
+
+    newTransactions.modified.forEach((transaction) => {
+      const index = transactions.findIndex(
+        (t) => t.id === transaction.transaction_id
+      );
+      transactions[index] = {
         id: transaction.transaction_id,
         date: transaction.date,
         account: transaction.account_id,
         vendor: transaction.merchant_name,
         description: transaction.name,
         value: transaction.amount,
-      });
-    }
-  });
-  // modified transactions
-  newTransactions.modified.forEach((transaction) => {
-    const index = transactions.findIndex(
-      (t) => t.id === transaction.transaction_id
-    );
-    transactions[index] = {
-      id: transaction.transaction_id,
-      date: transaction.date,
-      account: transaction.account_id,
-      vendor: transaction.merchant_name,
-      description: transaction.name,
-      value: transaction.amount,
-    };
-  });
-  // removed transactions
-  newTransactions.removed.forEach((transaction) => {
-    transactions = transactions.filter(
-      (t) => t.id !== transaction.transaction_id
-    );
-  });
-  const values = transactions.map((transaction) => [
-    transaction.id,
-    transaction.date,
-    transaction.account,
-    transaction.vendor,
-    transaction.description,
-    transaction.value,
-  ]);
-  await writeRange('test_transactions!A2:F', values);
-  res.json(await writeRange('credentials!CURSOR', [[newTransactions.cursor]]));
+      };
+    });
+
+    newTransactions.removed.forEach((transaction) => {
+      transactions = transactions.filter(
+        (t) => t.id !== transaction.transaction_id
+      );
+    });
+
+    const values = transactions.map((transaction) => [
+      transaction.id,
+      transaction.date,
+      transaction.account,
+      transaction.vendor,
+      transaction.description,
+      transaction.value,
+    ]);
+
+    await Promise.all([
+      googleSheetsService.writeRange('test_transactions!A2:F', values),
+      googleSheetsService.writeRange('credentials!CURSOR', [
+        [newTransactions.cursor],
+      ]),
+    ]);
+
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
 
 export async function receiveNotificationsController(req, res) {
-  // receive notifications from Plaid, like new transactions with SYNC_UPDATES_AVAILABLE
-  console.log(req.body);
-  if (req.body.webhook_code === 'SYNC_UPDATES_AVAILABLE') {
-    await syncTransactionsController(req, res);
-    return;
+  try {
+    console.log(req.body);
+    if (req.body.webhook_code === 'SYNC_UPDATES_AVAILABLE') {
+      await syncTransactionsController(req, res);
+      return;
+    }
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  res.sendStatus(200);
 }
 
 export async function fireTestWebhookEventController(req, res) {
-  const cellValue = (await readRange('credentials!PLAID')).values[0][0];
-  const { access_token } = await JSON.parse(cellValue);
-  await fireTestWebhookEvent(access_token);
-  res.sendStatus(200);
+  try {
+    const cellValue = (await googleSheetsService.readRange('credentials!PLAID'))
+      .values[0][0];
+    const { access_token } = JSON.parse(cellValue);
+    await plaidService.fireTestWebhookEvent(access_token);
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
 
 // For local development
