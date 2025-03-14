@@ -5,6 +5,8 @@ tmp
 
 # Secrets
 **/.env*
+**/credentials.json
+**/token.json
 
 # Frontend assets compiled code
 public/assets
