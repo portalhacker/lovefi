@@ -35,6 +35,41 @@ class PlaidService {
   }
 
   async createLinkToken() {
+    const request = {
+      user: {
+        client_user_id: '1',
+      },
+      client_name: 'lovefi',
+      products: process.env.PLAID_PRODUCTS.split(','),
+      transactions: {
+        days_requested: 730,
+      },
+      country_codes: process.env.PLAID_COUNTRY_CODES.split(','),
+      language: 'en',
+      webhook: `${process.env.WEBHOOK_HOST}/receiveNotifications`,
+      hosted_link: {},
+      // redirect_uri: 'https://domainname.com/oauth-page.html',
+      // account_filters: {
+      //   credit: {
+      //     account_subtypes: ['credit card'],
+      //   },
+      // },
+    };
+    try {
+      const linkTokenResponse = await this.plaidClient.linkTokenCreate(request);
+      return linkTokenResponse.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  /**
+   * This method is only for development purposes to bypass the Plaid Link flow on the sandbox environment
+   * In production, you should use the createLinkToken method
+   *
+   * @returns {string} publicToken
+   */
+  async getPublicTokenInDev() {
     const publicTokenRequest = {
       institution_id: 'ins_130358',
       initial_products: process.env.PLAID_PRODUCTS.split(','),

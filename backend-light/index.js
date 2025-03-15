@@ -53,6 +53,15 @@ export async function listInstitutionsController(req, res) {
   }
 }
 
+export async function getLinkTokenController(req, res) {
+  try {
+    const linkToken = await plaidService.createLinkToken();
+    res.redirect(linkToken.hosted_link_url);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 export async function getAccessTokenController(req, res) {
   try {
     const publicToken = await plaidService.createLinkToken();
@@ -154,10 +163,22 @@ export async function syncTransactionsController(req, res) {
 
 export async function receiveNotificationsController(req, res) {
   try {
-    console.log(req.body);
+    console.log('🚨 Webhook received:', req.body);
     if (req.body.webhook_code === 'SYNC_UPDATES_AVAILABLE') {
       await syncTransactionsController(req, res);
       return;
+    } else if (
+      req.body.webhook_type === 'LINK' &&
+      req.body.webhook_code === 'ITEM_ADD_RESULT'
+    ) {
+      const public_token = req.body.public_token;
+      const accessToken = await plaidService.getAccessToken(public_token);
+      await Promise.all([
+        googleSheetsService.writeRange('credentials!PLAID', [
+          [JSON.stringify(accessToken)],
+        ]),
+        googleSheetsService.writeRange('credentials!CURSOR', [['']]),
+      ]);
     }
     res.sendStatus(200);
   } catch (error) {
@@ -184,11 +205,12 @@ app.use(bodyParser.json());
 const port = 3000;
 
 app.get('/', (req, res) => res.sendFile('index.html', { root: __dirname }));
-app.get('/listSheets', listSheetsController);
-app.post('/writeRange', writeRangeController);
-app.get('/readRange', readRangeController);
-app.get('/listInstitutions', listInstitutionsController);
-app.get('/getAccessToken', getAccessTokenController);
+// app.get('/listSheets', listSheetsController);
+// app.post('/writeRange', writeRangeController);
+// app.get('/readRange', readRangeController);
+// app.get('/listInstitutions', listInstitutionsController);
+app.get('/getLinkToken', getLinkTokenController);
+// app.get('/getAccessToken', getAccessTokenController);
 app.get('/syncTransactions', syncTransactionsController);
 app.post('/receiveNotifications', receiveNotificationsController);
 app.get('/fireTestWebhookEventController', fireTestWebhookEventController);
