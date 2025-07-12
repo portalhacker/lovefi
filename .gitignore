@@ -2,6 +2,8 @@
 node_modules
 build
 tmp
+**/.venv
+**/__pycache__
 
 # Secrets
 **/.env*
