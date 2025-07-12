@@ -1,5 +1,7 @@
 import streamlit as st
 
+from services.database_service import DatabaseService
+
 COUNTRIES = [
     {"code": "CA", "name": "Canada"},
     {"code": "FR", "name": "France"},
@@ -49,3 +51,4 @@ with st.form("user_form"):
     if submitted:
         st.write(f"Hello {user['first_name']}")
         st.write(f"Sending user data to API")
+        st.write(DatabaseService().get_all_users())
