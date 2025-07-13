@@ -9,6 +9,7 @@ tmp
 **/.env*
 **/credentials.json
 **/token.json
+**/*.sqlite3
 
 # Frontend assets compiled code
 public/assets

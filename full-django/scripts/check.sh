@@ -1,0 +1,1 @@
+uv run ./lovefi/manage.py check

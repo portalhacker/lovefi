@@ -1,0 +1,1 @@
+python ./lovefi/manage.py makemigrations lovefi

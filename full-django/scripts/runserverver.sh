@@ -1,0 +1,1 @@
+uv run python ./lovefi/manage.py runserver
