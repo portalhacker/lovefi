@@ -24,5 +24,8 @@ urlpatterns = [
     path(route='', view=views.index, name='index'),
     path(route='accounts/', view=views.accounts_index, name='accounts_index'),
     path(route='accounts/create/', view=views.accounts_create, name='accounts_create'),
+    path(route='accounts/store/', view=views.account_store, name='account_store'),
     path(route='accounts/<int:account_id>/', view=views.account_show, name='account_show'),
+    path(route='accounts/<int:account_id>/edit/', view=views.account_edit, name='account_edit'),
+    path(route='accounts/<int:account_id>/update/', view=views.account_update, name='account_update'),
 ]

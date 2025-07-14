@@ -1,25 +1,53 @@
 from django.http import HttpResponse, Http404
-from django.shortcuts import get_list_or_404, get_object_or_404, render
-from .models import Account
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
+from .models import Account, Institution
 
 
 def index(request):
     return render(request=request, template_name="lovefi/index.html")
 
 def accounts_index(request):
-    '''List of all accounts.'''
+    '''Shows the account list'''
     accounts = Account.objects.all() # type: ignore
     context = {"accounts": accounts}
     return render(request=request, template_name="lovefi/accounts/index.html", context=context)
 
-
 def accounts_create(request):
-    '''Account creation form.'''
-    return HttpResponse(b"Hello. You're on the accounts create page.")
+    '''Shows the account create form'''
+    institutions = Institution.objects.all() # type: ignore
+    context = {"institutions": institutions}
+    return render(request=request, template_name="lovefi/accounts/create.html", context=context)
+
+def account_store(request):
+    '''Handles form submission to create an account'''
+    account = Account(
+        name=request.POST['name'],
+        number=request.POST['number'],
+        institution=get_object_or_404(Institution, pk=request.POST['institution']),
+        currency_code=request.POST['currency_code']
+    )
+    account.save()
+    return redirect('account_show', account_id=account.id) # type: ignore
 
 def account_show(request, account_id):
-    '''Show an account.'''
+    '''Shows the account details'''
     account = get_object_or_404(Account, pk=account_id)
     context = {"account": account}
     return render(request=request, template_name="lovefi/accounts/show.html", context=context)
 
+def account_edit(request, account_id):
+    '''Shows the account edit form'''
+    account = get_object_or_404(Account, pk=account_id)
+    institutions = Institution.objects.all() # type: ignore
+    context = {"account": account, "institutions": institutions}
+    return render(request=request, template_name="lovefi/accounts/edit.html", context=context)
+
+def account_update(request, account_id):
+    '''Handles form submission to update an account'''
+    account = get_object_or_404(Account, pk=account_id)
+    account.name = request.POST['name']
+    account.number = request.POST['number']
+    account.institution = get_object_or_404(Institution, pk=request.POST['institution'])
+    account.currency_code = request.POST['currency_code']
+    account.save()
+    return redirect('account_show', account_id=account_id)
