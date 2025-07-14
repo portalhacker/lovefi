@@ -24,5 +24,5 @@ urlpatterns = [
     path(route='', view=views.index, name='index'),
     path(route='accounts/', view=views.accounts_index, name='accounts_index'),
     path(route='accounts/create/', view=views.accounts_create, name='accounts_create'),
-    path(route='accounts/<int:account_id>/', view=views.accounts_show, name='accounts_show'),
+    path(route='accounts/<int:account_id>/', view=views.account_show, name='account_show'),
 ]

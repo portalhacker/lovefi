@@ -1,0 +1,7 @@
+<h1>LoveFI</h1>
+<a href="{% url 'index' %}">Home</a>
+<a href="{% url 'accounts_index' %}">Accounts</a>
+<h2>Account {{ account.name }}</h2>
+<p>Number: {{ account.number }}</p>
+<p>Institution: {{ account.institution.name }}</p>
+<p>Currency: {{ account.currency_code }}</p>

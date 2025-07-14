@@ -1,0 +1,14 @@
+<h1>LoveFI</h1>
+<a href="{% url 'index' %}">Home</a>
+<a href="{% url 'accounts_index' %}">Accounts</a>
+<h2>Accounts</h2>
+{% if accounts %}
+<ul>
+  {% for account in accounts %}
+  <li><a href="/accounts/{{ account.id }}/">{{ account.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No accounts available.</p>
+{% endif %}
+<a href="{% url 'accounts_create' %}">Create Account</a>

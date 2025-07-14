@@ -1,22 +1,25 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, Http404
+from django.shortcuts import get_list_or_404, get_object_or_404, render
 from .models import Account
 
 
 def index(request):
-    return HttpResponse(b"Hello, world. You're at the LoveFI index.")
+    return render(request=request, template_name="lovefi/index.html")
 
 def accounts_index(request):
     '''List of all accounts.'''
-    accounts = Account.objects.all()  # type: ignore
-    formatted_accounts = "\n".join([str(account) for account in accounts])
-    return HttpResponse(f"Accounts: {formatted_accounts}")
+    accounts = Account.objects.all() # type: ignore
+    context = {"accounts": accounts}
+    return render(request=request, template_name="lovefi/accounts/index.html", context=context)
+
 
 def accounts_create(request):
     '''Account creation form.'''
     return HttpResponse(b"Hello. You're on the accounts create page.")
 
-def accounts_show(request, account_id):
+def account_show(request, account_id):
     '''Show an account.'''
-    return HttpResponse(b"Hello. You're on the account show page.")
+    account = get_object_or_404(Account, pk=account_id)
+    context = {"account": account}
+    return render(request=request, template_name="lovefi/accounts/show.html", context=context)
 
