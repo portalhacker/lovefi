@@ -1,0 +1,19 @@
+<h1>LoveFI</h1>
+<a href="{% url 'index' %}">Home</a>
+<a href="{% url 'accounts_index' %}">Accounts</a>
+<a href="{% url 'transactions_index' %}">Transactions</a>
+<h2>Transactions</h2>
+{% if transactions %}
+<ul>
+  {% for transaction in transactions %}
+  <li>
+    <a href="/transactions/{{ transaction.id }}/"
+      >{{ transaction.amount }} {{ transaction.date }}</a
+    >
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No transactions available.</p>
+{% endif %}
+<a href="{% url 'transaction_create' %}">Create Transaction</a>

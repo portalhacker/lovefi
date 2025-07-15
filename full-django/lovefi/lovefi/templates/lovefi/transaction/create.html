@@ -1,0 +1,25 @@
+<h1>LoveFI</h1>
+<a href="{% url 'index' %}">Home</a>
+<a href="{% url 'accounts_index' %}">Accounts</a>
+<a href="{% url 'transactions_index' %}">Transactions</a>
+<form action="{% url 'transaction_store' %}" method="post">
+  {% csrf_token %}
+  <fieldset>
+    <legend><h1>Create Transaction</h1></legend>
+    <label for="amount">Amount</label>
+    <input type="number" name="amount" id="amount" />
+    <label for="account">Account</label>
+    <select name="account" id="account">
+      {% for account in accounts %}
+      <option value="{{ account.id }}">{{ account.name }}</option>
+      {% endfor %}
+    </select>
+    <label for="currency_code">Currency</label>
+    <input type="text" name="currency_code" id="currency_code" />
+    <label for="date">Date</label>
+    <input type="date" name="date" id="date" />
+    <label for="description">Description</label>
+    <input type="text" name="description" id="description" />
+  </fieldset>
+  <input type="submit" value="Create" />
+</form>

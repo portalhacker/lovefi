@@ -29,4 +29,11 @@ urlpatterns = [
     path(route='accounts/<int:account_id>/edit/', view=views.account.account_edit, name='account_edit'),
     path(route='accounts/<int:account_id>/update/', view=views.account.account_update, name='account_update'),
     path(route='accounts/<int:account_id>/delete/', view=views.account.account_delete, name='account_delete'),
+    path(route='transactions/', view=views.transaction.transactions_index, name='transactions_index'),
+    path(route='transactions/create/', view=views.transaction.transaction_create, name='transaction_create'),
+    path(route='transactions/store/', view=views.transaction.transaction_store, name='transaction_store'),
+    path(route='transactions/<int:transaction_id>/', view=views.transaction.transaction_show, name='transaction_show'),
+    path(route='transactions/<int:transaction_id>/edit/', view=views.transaction.transaction_edit, name='transaction_edit'),
+    path(route='transactions/<int:transaction_id>/update/', view=views.transaction.transaction_update, name='transaction_update'),
+    path(route='transactions/<int:transaction_id>/delete/', view=views.transaction.transaction_delete, name='transaction_delete'),
 ]
