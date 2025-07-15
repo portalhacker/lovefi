@@ -6,3 +6,4 @@
 <p>Institution: {{ account.institution.name }}</p>
 <p>Currency: {{ account.currency_code }}</p>
 <a href="{% url 'account_edit' account.id %}">Edit</a>
+<a href="{% url 'account_delete' account.id %}">Delete</a>
