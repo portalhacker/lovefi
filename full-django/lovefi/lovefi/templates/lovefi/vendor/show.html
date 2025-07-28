@@ -1,0 +1,6 @@
+<h1>LoveFI</h1>
+<a href="{% url 'index' %}">Home</a>
+<a href="{% url 'vendors_index' %}">Vendors</a>
+<h2>Vendor {{ vendor.name }}</h2>
+<a href="{% url 'vendor_edit' vendor.id %}">Edit</a>
+<a href="{% url 'vendor_delete' vendor.id %}">Delete</a>

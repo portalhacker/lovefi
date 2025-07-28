@@ -1,1 +1,1 @@
-from . import account, generic, transaction
+from . import account, generic, transaction, vendor

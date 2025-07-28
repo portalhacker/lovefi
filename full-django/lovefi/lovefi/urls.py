@@ -36,4 +36,11 @@ urlpatterns = [
     path(route='transactions/<int:transaction_id>/edit/', view=views.transaction.transaction_edit, name='transaction_edit'),
     path(route='transactions/<int:transaction_id>/update/', view=views.transaction.transaction_update, name='transaction_update'),
     path(route='transactions/<int:transaction_id>/delete/', view=views.transaction.transaction_delete, name='transaction_delete'),
+    path(route='vendors/', view=views.vendor.vendors_index, name='vendors_index'),
+    path(route='vendors/create/', view=views.vendor.vendor_create, name='vendor_create'),
+    path(route='vendors/store/', view=views.vendor.vendor_store, name='vendor_store'),
+    path(route='vendors/<int:vendor_id>/', view=views.vendor.vendor_show, name='vendor_show'),
+    path(route='vendors/<int:vendor_id>/edit/', view=views.vendor.vendor_edit, name='vendor_edit'),
+    path(route='vendors/<int:vendor_id>/update/', view=views.vendor.vendor_update, name='vendor_update'),
+    path(route='vendors/<int:vendor_id>/delete/', view=views.vendor.vendor_delete, name='vendor_delete'),
 ]

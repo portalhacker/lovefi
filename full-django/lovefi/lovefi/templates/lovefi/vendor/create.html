@@ -1,0 +1,14 @@
+<h1>LoveFI</h1>
+<a href="{% url 'index' %}">Home</a>
+<a href="{% url 'vendors_index' %}">Vendors</a>
+<form action="{% url 'vendor_store' %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>
+            <h1>Create Vendor</h1>
+        </legend>
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" />
+    </fieldset>
+    <input type="submit" value="Create" />
+</form>
