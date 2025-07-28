@@ -5,7 +5,9 @@
 {% if accounts %}
 <ul>
   {% for account in accounts %}
-  <li><a href="/accounts/{{ account.id }}/">{{ account.name }}</a></li>
+  <li>
+    <a href="/accounts/{{ account.id }}/">{{ account.institution.name }}: {{ account.name }} ({{ account.number }})</a>
+  </li>
   {% endfor %}
 </ul>
 {% else %}

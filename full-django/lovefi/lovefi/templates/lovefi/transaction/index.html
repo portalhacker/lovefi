@@ -8,7 +8,7 @@
   {% for transaction in transactions %}
   <li>
     <a href="/transactions/{{ transaction.id }}/"
-      >{{ transaction.amount }} {{ transaction.date }}</a
+      >{{ transaction.date }}: $ {{ transaction.amount }}</a
     >
   </li>
   {% endfor %}
