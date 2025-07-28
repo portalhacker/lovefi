@@ -5,7 +5,6 @@
 <h2>Transaction {{ transaction.description }}</h2>
 <p>Amount: {{ transaction.amount }}</p>
 <p>Account: {{ transaction.account.name }}</p>
-<p>Currency: {{ transaction.currency_code }}</p>
 <p>Date: {{ transaction.date }}</p>
 <p>Description: {{ transaction.description }}</p>
 <a href="{% url 'transaction_edit' transaction.id %}">Edit</a>

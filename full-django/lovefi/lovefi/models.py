@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.functions import Length
 
+
 class Institution(models.Model):
     name = models.CharField(max_length=255)
     country_code = models.CharField(max_length=2)
@@ -20,10 +21,9 @@ class Account(models.Model):
 class Transaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     account = models.ForeignKey(Account, on_delete=models.PROTECT)
-    currency_code = models.CharField(max_length=3)
     date = models.DateField()
     description = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.amount} {self.currency_code} - {self.date} - {self.description}"
+        return f"{self.amount} - {self.date} - {self.description}"
         

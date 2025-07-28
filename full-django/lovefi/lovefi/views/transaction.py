@@ -19,7 +19,6 @@ def transaction_store(request):
     transaction = Transaction(
         amount=request.POST['amount'],
         account=get_object_or_404(Account, pk=request.POST['account']),
-        currency_code=request.POST['currency_code'],
         date=request.POST['date'],
         description=request.POST['description']
     )
@@ -44,7 +43,6 @@ def transaction_update(request, transaction_id):
     transaction = get_object_or_404(Transaction, pk=transaction_id)
     transaction.amount = request.POST['amount']
     transaction.account = get_object_or_404(Account, pk=request.POST['account'])
-    transaction.currency_code = request.POST['currency_code']
     transaction.date = request.POST['date']
     transaction.description = request.POST['description']
     transaction.save()

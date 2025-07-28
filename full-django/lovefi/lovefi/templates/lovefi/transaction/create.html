@@ -5,7 +5,9 @@
 <form action="{% url 'transaction_store' %}" method="post">
   {% csrf_token %}
   <fieldset>
-    <legend><h1>Create Transaction</h1></legend>
+    <legend>
+      <h1>Create Transaction</h1>
+    </legend>
     <label for="amount">Amount</label>
     <input type="number" name="amount" id="amount" />
     <label for="account">Account</label>
@@ -14,8 +16,6 @@
       <option value="{{ account.id }}">{{ account.name }}</option>
       {% endfor %}
     </select>
-    <label for="currency_code">Currency</label>
-    <input type="text" name="currency_code" id="currency_code" />
     <label for="date">Date</label>
     <input type="date" name="date" id="date" />
     <label for="description">Description</label>

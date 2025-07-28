@@ -5,39 +5,24 @@
 <form action="{% url 'transaction_update' transaction.id %}" method="post">
   {% csrf_token %}
   <fieldset>
-    <legend><h1>Edit Transaction</h1></legend>
+    <legend>
+      <h1>Edit Transaction</h1>
+    </legend>
     {% if error_message %}
     <p><strong>{{ error_message }}</strong></p>
     {% endif %}
     <label for="amount">Amount</label>
-    <input
-      type="number"
-      name="amount"
-      id="amount"
-      value="{{ transaction.amount }}"
-    />
+    <input type="number" name="amount" id="amount" value="{{ transaction.amount }}" />
     <label for="account">Account</label>
     <select name="account" id="account">
       {% for account in accounts %}
       <option value="{{ account.id }}">{{ account.name }}</option>
       {% endfor %}
     </select>
-    <label for="currency_code">Currency</label>
-    <input
-      type="text"
-      name="currency_code"
-      id="currency_code"
-      value="{{ transaction.currency_code }}"
-    />
     <label for="date">Date</label>
     <input type="date" name="date" id="date" value="{{ transaction.date }}" />
     <label for="description">Description</label>
-    <input
-      type="text"
-      name="description"
-      id="description"
-      value="{{ transaction.description }}"
-    />
+    <input type="text" name="description" id="description" value="{{ transaction.description }}" />
   </fieldset>
   <input type="submit" value="Update" />
 </form>
