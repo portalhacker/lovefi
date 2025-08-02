@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from ..models import Account, Institution
+
+from ..models import Account, Currency, Institution
 
 
 def accounts_index(request):
@@ -11,7 +12,8 @@ def accounts_index(request):
 def account_create(request):
     '''Shows the account create form'''
     institutions = Institution.objects.all() # type: ignore
-    context = {"institutions": institutions}
+    currencies = Currency.objects.all() # type: ignore
+    context = {"institutions": institutions, "currencies": currencies}
     return render(request=request, template_name="lovefi/account/create.html", context=context)
 
 def account_store(request):
@@ -20,7 +22,7 @@ def account_store(request):
         name=request.POST['name'],
         number=request.POST['number'],
         institution=get_object_or_404(Institution, pk=request.POST['institution']),
-        currency_code=request.POST['currency_code']
+        currency=get_object_or_404(Currency, pk=request.POST['currency'])
     )
     account.save()
     return redirect('account_show', account_id=account.id) # type: ignore

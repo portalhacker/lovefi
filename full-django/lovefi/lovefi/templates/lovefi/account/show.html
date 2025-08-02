@@ -6,7 +6,7 @@
     <h1>Account {{ account.name }}</h1>
     <p>Number: {{ account.number }}</p>
     <p>Institution: {{ account.institution.name }}</p>
-    <p>Currency: {{ account.currency_code }}</p>
+    <p>Currency: {{ account.currency.code }} - {{ account.currency.name }}</p>
     <a href="{% url 'account_edit' account.id %}">Edit</a>
     <a href="{% url 'account_delete' account.id %}">Delete</a>
 {% endblock content %}

@@ -1,1 +1,1 @@
-python ./lovefi/manage.py makemigrations lovefi
+uv run python ./lovefi/manage.py makemigrations lovefi

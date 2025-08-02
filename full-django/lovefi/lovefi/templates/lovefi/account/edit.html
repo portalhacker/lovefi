@@ -22,11 +22,12 @@
       <select name="institution" id="institution">
         {% for institution in institutions %}<option value="{{ institution.id }}">{{ institution.name }}</option>{% endfor %}
       </select>
-      <label for="currency_code">Currency</label>
-      <input type="text"
-             name="currency_code"
-             id="currency_code"
-             value="{{ account.currency_code }}" />
+      <label for="currency">Currency</label>
+      <select name="currency" id="currency">
+        {% for currency in currencies %}
+          <option value="{{ currency.id }}">{{ currency.code }} - {{ currency.name }}</option>
+        {% endfor %}
+      </select>
     </fieldset>
     <input type="submit" value="Update" />
   </form>
