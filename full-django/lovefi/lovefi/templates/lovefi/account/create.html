@@ -1,22 +1,25 @@
-<h1>LoveFI</h1>
-<a href="{% url 'index' %}">Home</a>
-<a href="{% url 'accounts_index' %}">Accounts</a>
-<form action="{% url 'account_store' %}" method="post">
-  {% csrf_token %}
-  <fieldset>
-    <legend><h1>Create Account</h1></legend>
-    <label for="name">Name</label>
-    <input type="text" name="name" id="name" />
-    <label for="number">Number</label>
-    <input type="text" name="number" id="number" />
-    <label for="institution">Institution</label>
-    <select name="institution" id="institution">
-      {% for institution in institutions %}
-      <option value="{{ institution.id }}">{{ institution.name }}</option>
-      {% endfor %}
-    </select>
-    <label for="currency_code">Currency</label>
-    <input type="text" name="currency_code" id="currency_code" />
-  </fieldset>
-  <input type="submit" value="Create" />
-</form>
+{% extends "lovefi/layout.html" %}
+{% block title %}
+  Create Account
+{% endblock title %}
+{% block content %}
+  <form action="{% url 'account_store' %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+      <legend>
+        <h1>Create Account</h1>
+      </legend>
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" />
+      <label for="number">Number</label>
+      <input type="text" name="number" id="number" />
+      <label for="institution">Institution</label>
+      <select name="institution" id="institution">
+        {% for institution in institutions %}<option value="{{ institution.id }}">{{ institution.name }}</option>{% endfor %}
+      </select>
+      <label for="currency_code">Currency</label>
+      <input type="text" name="currency_code" id="currency_code" />
+    </fieldset>
+    <input type="submit" value="Create" />
+  </form>
+{% endblock content %}

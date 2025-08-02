@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description"
+              content="LoveFI - Personal Finance Management Application">
+        <meta name="keywords"
+              content="finance, personal finance, money management, budgeting">
+        <title>
+            lovefi -
+            {% block title %}
+            {% endblock title %}
+        </title>
+        <link rel="stylesheet" href="{% static 'lovefi/style.css' %}" />
+    </head>
+    <body>
+        <div id="body-container">
+            <nav>
+                <ul id="nav-list">
+                    <li>
+                        <a href="{% url 'index' %}">lovefi</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts_index' %}">Accounts</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'transactions_index' %}">Transactions</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'vendors_index' %}">Vendors</a>
+                    </li>
+                </ul>
+            </nav>
+            <main>
+                {% block content %}
+                {% endblock content %}
+            </main>
+        </div>
+    </body>
+</html>

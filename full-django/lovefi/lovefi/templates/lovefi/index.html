@@ -1,9 +1,7 @@
-{% load static %}
-
-<link rel="stylesheet" href="{% static 'lovefi/style.css' %}" />
-
-<h1>LoveFI</h1>
-<a href="{% url 'index' %}">Home</a>
-<a href="{% url 'accounts_index' %}">Accounts</a>
-<a href="{% url 'transactions_index' %}">Transactions</a>
-<h2>Home</h2>
+{% extends "lovefi/layout.html" %}
+{% block title %}
+    Home
+{% endblock title %}
+{% block content %}
+    <h1>Home</h1>
+{% endblock content %}

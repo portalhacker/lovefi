@@ -1,9 +1,12 @@
-<h1>LoveFI</h1>
-<a href="{% url 'index' %}">Home</a>
-<a href="{% url 'accounts_index' %}">Accounts</a>
-<h2>Account {{ account.name }}</h2>
-<p>Number: {{ account.number }}</p>
-<p>Institution: {{ account.institution.name }}</p>
-<p>Currency: {{ account.currency_code }}</p>
-<a href="{% url 'account_edit' account.id %}">Edit</a>
-<a href="{% url 'account_delete' account.id %}">Delete</a>
+{% extends "lovefi/layout.html" %}
+{% block title %}
+    Account
+{% endblock title %}
+{% block content %}
+    <h1>Account {{ account.name }}</h1>
+    <p>Number: {{ account.number }}</p>
+    <p>Institution: {{ account.institution.name }}</p>
+    <p>Currency: {{ account.currency_code }}</p>
+    <a href="{% url 'account_edit' account.id %}">Edit</a>
+    <a href="{% url 'account_delete' account.id %}">Delete</a>
+{% endblock content %}

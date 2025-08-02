@@ -1,16 +1,19 @@
-<h1>LoveFI</h1>
-<a href="{% url 'index' %}">Home</a>
-<a href="{% url 'vendors_index' %}">Vendors</a>
-<h2>Vendors</h2>
-{% if vendors %}
-<ul>
-    {% for vendor in vendors %}
-    <li>
-        <a href="/vendors/{{ vendor.id }}/">{{ vendor.name }}</a>
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No vendors available.</p>
-{% endif %}
-<a href="{% url 'vendor_create' %}">Create Vendor</a>
+{% extends "lovefi/layout.html" %}
+{% block title %}
+    Vendors
+{% endblock title %}
+{% block content %}
+    <h1>Vendors</h1>
+    {% if vendors %}
+        <ul>
+            {% for vendor in vendors %}
+                <li>
+                    <a href="{% url 'vendor_show' vendor.id %}">{{ vendor.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No vendors available.</p>
+    {% endif %}
+    <a href="{% url 'vendor_create' %}">Create Vendor</a>
+{% endblock content %}

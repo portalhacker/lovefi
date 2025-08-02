@@ -1,30 +1,33 @@
-<h1>LoveFI</h1>
-<a href="{% url 'index' %}">Home</a>
-<a href="{% url 'accounts_index' %}">Accounts</a>
-<form action="{% url 'account_update' account.id %}" method="post">
-  {% csrf_token %}
-  <fieldset>
-    <legend><h1>{{ account.name }}</h1></legend>
-    {% if error_message %}
-    <p><strong>{{ error_message }}</strong></p>
-    {% endif %}
-    <label for="name">Name</label>
-    <input type="text" name="name" id="name" value="{{ account.name }}" />
-    <label for="number">Number</label>
-    <input type="text" name="number" id="number" value="{{ account.number }}" />
-    <label for="institution">Institution</label>
-    <select name="institution" id="institution">
-      {% for institution in institutions %}
-      <option value="{{ institution.id }}">{{ institution.name }}</option>
-      {% endfor %}
-    </select>
-    <label for="currency_code">Currency</label>
-    <input
-      type="text"
-      name="currency_code"
-      id="currency_code"
-      value="{{ account.currency_code }}"
-    />
-  </fieldset>
-  <input type="submit" value="Update" />
-</form>
+{% extends "lovefi/layout.html" %}
+{% block title %}
+  Edit Account
+{% endblock title %}
+{% block content %}
+  <form action="{% url 'account_update' account.id %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+      <legend>
+        <h1>Edit Account: {{ account.name }}</h1>
+      </legend>
+      {% if error_message %}
+        <p>
+          <strong>{{ error_message }}</strong>
+        </p>
+      {% endif %}
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" value="{{ account.name }}" />
+      <label for="number">Number</label>
+      <input type="text" name="number" id="number" value="{{ account.number }}" />
+      <label for="institution">Institution</label>
+      <select name="institution" id="institution">
+        {% for institution in institutions %}<option value="{{ institution.id }}">{{ institution.name }}</option>{% endfor %}
+      </select>
+      <label for="currency_code">Currency</label>
+      <input type="text"
+             name="currency_code"
+             id="currency_code"
+             value="{{ account.currency_code }}" />
+    </fieldset>
+    <input type="submit" value="Update" />
+  </form>
+{% endblock content %}

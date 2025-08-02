@@ -73,3 +73,21 @@ h6 {
 #__next {
   isolation: isolate;
 }
+
+#body-container {
+  display: flex;
+}
+
+nav {
+  background-color: #000000;
+}
+
+nav a {
+  color: #ffffff;
+}
+
+#nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

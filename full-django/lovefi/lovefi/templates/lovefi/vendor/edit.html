@@ -1,17 +1,22 @@
-<h1>LoveFI</h1>
-<a href="{% url 'index' %}">Home</a>
-<a href="{% url 'vendors_index' %}">Vendors</a>
-<form action="{% url 'vendor_update' vendor.id %}" method="post">
-    {% csrf_token %}
-    <fieldset>
-        <legend>
-            <h1>{{ vendor.name }}</h1>
-        </legend>
-        {% if error_message %}
-        <p><strong>{{ error_message }}</strong></p>
-        {% endif %}
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" value="{{ vendor.name }}" />
-    </fieldset>
-    <input type="submit" value="Update" />
-</form>
+{% extends "lovefi/layout.html" %}
+{% block title %}
+    Edit Vendor
+{% endblock title %}
+{% block content %}
+    <form action="{% url 'vendor_update' vendor.id %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            <legend>
+                <h1>{{ vendor.name }}</h1>
+            </legend>
+            {% if error_message %}
+                <p>
+                    <strong>{{ error_message }}</strong>
+                </p>
+            {% endif %}
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" value="{{ vendor.name }}" />
+        </fieldset>
+        <input type="submit" value="Update" />
+    </form>
+{% endblock content %}
